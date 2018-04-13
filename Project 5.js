@@ -8,7 +8,7 @@ let persons = {};
 function main() {
     const SD_ARRAY = 0,
         MD_ARRAY = 1;
-    process.stdout.write('\x1Bc'); //Clears the screen
+    process.stdout.write('\x1Bc');
     setContinueResponse();
     while (continueResponse === 1) {
         setWhichPopulate();
@@ -18,7 +18,7 @@ function main() {
                 populateLastNames(i);
                 populateFirstNames(i);
                 populateAges(i);
-                process.stdout.write('\x1Bc'); //Clears the screen
+                process.stdout.write('\x1Bc');
             }
         } else if (whichPopulate === MD_ARRAY) {
             populatePeople();
@@ -78,9 +78,6 @@ function populateAges(index) {
     while(typeof ages[index] === 'undefined' || isNaN(ages[index]) || ages[index] < 0 || ages[index] > 149) {
         ages[index] = Number(PROMPT.question(`Please enter age: `));
     }
-    /*while (ages[i] === undefined || !/^([1-9]|[0-9][0-9]|[1-1][0-4][0-9])$/.test(ages[i])) {
-         ages[i] = Number(PROMPT.question(`Please enter age: `));
-    }*/
 }
 
 function populatePeople() {
@@ -89,7 +86,7 @@ function populatePeople() {
     while (isNaN(numPeople) || numPeople < 1 || numPeople > 10) {
         numPeople = Number(PROMPT.question(`\nHow many people to enter? (Not more than 10): `));
     }
-    process.stdout.write('\x1Bc'); //Clears the screen
+    process.stdout.write('\x1Bc');
     for (let i = 0; i < numPeople; i++) {
         people[i] = [];
         for (let j = 0; j < COLUMNS; j++) {
@@ -107,18 +104,18 @@ function populatePeople() {
                 }
             }
         }
-        process.stdout.write('\x1Bc'); //Clears the screen
+        process.stdout.write('\x1Bc');
     }
 }
 
 function populatePersonsMap() {
-    persons = {'person': []}; //Creates an array in an object to hold persons
+    persons = {'person': []};
     const COLUMNS = 3;
     let numPersons = 0;
     while (isNaN(numPersons) || numPersons < 1 || numPersons > 10) {
         numPersons = Number(PROMPT.question(`\nHow many persons to enter? (Not more than 10): `));
     }
-    process.stdout.write('\x1Bc'); //Clears the screen
+    process.stdout.write('\x1Bc');
     for (let i = 0; i < numPersons; i++) {
         let person = [];
         for (let j = 0; j < COLUMNS; j++) {
@@ -139,7 +136,7 @@ function populatePersonsMap() {
                 }
             }
         }
-        process.stdout.write('\x1Bc'); //Clears the screen
+        process.stdout.write('\x1Bc');
     }
 }
 
@@ -159,11 +156,8 @@ function printPeople() {
 }
 
 function printPersons() {
-    // console.log(persons);
-    // console.log(JSON.stringify(persons, null, "   "));
     for (let i = 0; i < persons.person.length; i++) {
         console.log(persons.person[i]);
-        // console.log(`Last Name: ${persons.person[i].lastName}, First Name: ${persons.person[i].firstName}, Age: ${persons.person[i].age}`);
     }
 }
 
