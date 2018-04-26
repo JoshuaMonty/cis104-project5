@@ -1,40 +1,21 @@
 "use strict";
 const PROMPT = require('readline-sync');
 
-let lastNames = [], firstNames = [], ages = [], people = [];
-let continueResponse, whichPopulate, numNames;
-let persons = {};
+let priceTable = [];
+let continueResponse;
+let numPassengers, numZones, price;
 
 function main() {
-    const SD_ARRAY = 0,
-        MD_ARRAY = 1;
-    process.stdout.write('\x1Bc');
     setContinueResponse();
-    while (continueResponse === 1) {
-        setWhichPopulate();
-        if (whichPopulate === SD_ARRAY) {
-            setNumNames();
-            for (let i = 0; i < numNames; i++) {
-                populateLastNames(i);
-                populateFirstNames(i);
-                populateAges(i);
-                process.stdout.write('\x1Bc');
-            }
-        } else if (whichPopulate === MD_ARRAY) {
-            populatePeople();
-        } else {
-            populatePersonsMap();
-        }
+    populatePriceTable();
+    while (continueResponse === 1)
+    {
+        setNumPassengers();
+        setNumZones();
+        calculatePrice();
+        printPrice();
         setContinueResponse();
     }
-    if (whichPopulate === 0) {
-        printParallelArrays();
-    } else if (whichPopulate === 1) {
-        printPeople();
-    } else {
-        printPersons();
-    }
-    printGoodbye();
 }
 
 main();
@@ -43,124 +24,60 @@ function setContinueResponse() {
     if (continueResponse) {
         continueResponse = -1;
         while (continueResponse !== 0 && continueResponse !== 1) {
-            continueResponse = Number(PROMPT.question(`\nDo you want to continue? [0=no, 1=yes]: `));
+            continueResponse = Number(PROMPT.question(`\nDo you want to enter a new ride?\n\t0. No\n\t1. Yes `));
         }
     } else {
         continueResponse = 1;
     }
 }
 
-function setWhichPopulate() {
-    while (typeof whichPopulate === 'undefined' || isNaN(whichPopulate) || whichPopulate < 0 || whichPopulate > 2) {
-        whichPopulate = Number(PROMPT.question(`\nWhich collection do you wish to use? [0=SD Array, 1=MD Array, 2=Map]: `));
+function setNumPassengers() {
+    numPassengers = PROMPT.question("Number of passengers: ");
+    if (numPassengers > 4 || numPassengers < 0) {
+        return setNumPassengers();
     }
 }
 
-function setNumNames() {
-    while (typeof numNames === 'undefined' || isNaN(numNames) || numNames < 1 || numNames > 10) {
-        numNames = Number(PROMPT.question(`\nHow many names to enter? (Not more than 10): `));
+function setNumZones() {
+    numZones = PROMPT.question("Number of zones crossed: ");
+    if (numZones > 3 || numZones < 0) {
+        return setNumZones();
     }
 }
 
-function populateLastNames(index) {
-    while (typeof lastNames[index] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(lastNames[index])) {
-        lastNames[index] = PROMPT.question(`Please enter last name: `);
-    }
+function calculatePrice() {
+    price = priceTable[numPassengers][numZones];
 }
 
-function populateFirstNames(index) {
-    while (typeof firstNames[index] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(firstNames[index])) {
-        firstNames[index] = PROMPT.question(`Please enter first name: `);
-    }
+function printPrice() {
+    console.log(`The price for your ride is: $${price}`);
 }
 
-function populateAges(index) {
-    while(typeof ages[index] === 'undefined' || isNaN(ages[index]) || ages[index] < 0 || ages[index] > 149) {
-        ages[index] = Number(PROMPT.question(`Please enter age: `));
-    }
-}
+function populatePriceTable() {
+    priceTable[0] = [];
+    priceTable[1] = [];
+    priceTable[2] = [];
+    priceTable[3] = [];
+    priceTable[4] = [];
 
-function populatePeople() {
-    const COLUMNS = 3;
-    let numPeople = 0;
-    while (isNaN(numPeople) || numPeople < 1 || numPeople > 10) {
-        numPeople = Number(PROMPT.question(`\nHow many people to enter? (Not more than 10): `));
-    }
-    process.stdout.write('\x1Bc');
-    for (let i = 0; i < numPeople; i++) {
-        people[i] = [];
-        for (let j = 0; j < COLUMNS; j++) {
-            if (j === 0) {
-                while (typeof people[i][j] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(people[i][j])) {
-                    people[i][j] = PROMPT.question(`Please enter last name: `);
-                }
-            } else if (j === 1) {
-                while (typeof people[i][j] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(people[i][j])) {
-                    people[i][j] = PROMPT.question(`Please enter First name: `);
-                }
-            } else {
-                while(typeof people[i][j] === 'undefined' || isNaN(people[i][j]) || people[i][j] < 0 || people[i][j] > 149) {
-                    people[i][j] = Number(PROMPT.question(`Please enter age: `));
-                }
-            }
-        }
-        process.stdout.write('\x1Bc');
-    }
-}
-
-function populatePersonsMap() {
-    persons = {'person': []};
-    const COLUMNS = 3;
-    let numPersons = 0;
-    while (isNaN(numPersons) || numPersons < 1 || numPersons > 10) {
-        numPersons = Number(PROMPT.question(`\nHow many persons to enter? (Not more than 10): `));
-    }
-    process.stdout.write('\x1Bc');
-    for (let i = 0; i < numPersons; i++) {
-        let person = [];
-        for (let j = 0; j < COLUMNS; j++) {
-            if (j === 0) {
-                while (typeof person[j] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(person[j])) {
-                    person[j] = PROMPT.question(`Please enter last name: `);
-                    persons.person.push({'lastName': person[j]});
-                }
-            } else if (j === 1) {
-                while (typeof person[j] === 'undefined' || !/(^[a-z]+$){1,30}/i.test(person[j])) {
-                    person[j] = PROMPT.question(`Please enter first name: `);
-                    persons.person.push({'firstName': person[j]});
-                }
-            } else {
-                while (typeof person[j] === 'undefined' || isNaN(person[j]) || person[j] < 0 || person[j] > 149) {
-                    person[j] = Number(PROMPT.question(`Please enter age: `));
-                    persons.person.push({'age': person[j]});
-                }
-            }
-        }
-        process.stdout.write('\x1Bc');
-    }
-}
-
-function printParallelArrays() {
-    for (let i = 0; i < lastNames.length; i++) {
-        console.log(`${lastNames[i]}, ${firstNames[i]}, ${ages[i]}`);
-    }
-}
-
-function printPeople() {
-    const COLUMNS = 3;
-    for (let i = 0; i < people.length; i++) {
-        for (let j = 0; j < COLUMNS; j++) {
-            console.log(people[i][j]);
-        }
-    }
-}
-
-function printPersons() {
-    for (let i = 0; i < persons.person.length; i++) {
-        console.log(persons.person[i]);
-    }
-}
-
-function printGoodbye() {
-    console.log(`\tGoodbye.`);
+    priceTable[0][0] = 0;
+    priceTable[0][1] = 0;
+    priceTable[0][2] = 0;
+    priceTable[0][3] = 0;
+    priceTable[1][0] = 7.5;
+    priceTable[1][1] = 10;
+    priceTable[1][2] = 12;
+    priceTable[1][3] = 12.75;
+    priceTable[2][0] = 14;
+    priceTable[2][1] = 18.5;
+    priceTable[2][2] = 22;
+    priceTable[2][3] = 23;
+    priceTable[3][0] = 20;
+    priceTable[3][1] = 21;
+    priceTable[3][2] = 32;
+    priceTable[3][3] = 33;
+    priceTable[4][0] = 25;
+    priceTable[4][1] = 27.5;
+    priceTable[4][2] = 36;
+    priceTable[4][3] = 37;
 }
