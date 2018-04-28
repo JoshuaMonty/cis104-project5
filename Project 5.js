@@ -3,7 +3,8 @@ const PROMPT = require('readline-sync');
 
 let priceTable = [];
 let continueResponse;
-let numPassengers, numZones, price;
+let numPassengers, numZones;
+let price;
 
 function main() {
     setContinueResponse();
